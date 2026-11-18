@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Visor de informes</title>
+<link rel="stylesheet" href="css/styles.css"></head>
+<body><main style="padding-top:28px" id="m">
+<div class="card" id="in"><div class="kicker">Herramienta para el profesional</div><h1>Visor de informes</h1>
+<p class="muted">Convierte la «copia de datos» que llega en el correo en un informe con formato, listo para imprimir o guardar como PDF en la ficha del paciente. <b>Todo ocurre en tu navegador: no se sube nada a ningún sitio.</b></p>
+<div class="fld"><label class="f" for="j">Pega aquí el contenido del campo «copia_datos_json» del correo</label><textarea id="j" style="min-height:140px;font-family:monospace;font-size:.8rem"></textarea></div>
+<button class="btn" id="go">Mostrar informe</button> <span id="err" class="small" style="color:var(--bad)"></span></div>
+<div id="out" style="display:none"><div style="display:flex;gap:10px;margin-bottom:14px"><button class="btn" id="pr">Imprimir / Guardar PDF</button><button class="btn sec" id="back">← Otro informe</button></div><div class="card" id="rep"></div></div>
+</main><div id="printRoot"></div>
+<script src="js/config.js"></script><script src="js/data.js"></script><script src="js/report.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+$("#go").onclick=()=>{ try{ const S=JSON.parse($("#j").value.trim()); if(!S||!S.data) throw 0;
+  const h=Report.html(S,CONFIG); $("#rep").innerHTML=h; $("#printRoot").innerHTML=h; window._S=S;
+  $("#in").style.display="none"; $("#out").style.display="block"; $("#err").textContent=""; }
+  catch(e){ $("#err").textContent="No se ha podido leer. Copia el contenido completo del campo."; } };
+$("#back").onclick=()=>{ $("#out").style.display="none"; $("#in").style.display="block"; };
+$("#pr").onclick=()=>{ const o=document.title; document.title="Cuestionario dietético - "+((window._S.data&&window._S.data.nombre)||"paciente"); document.body.classList.add("printing"); window.print(); setTimeout(()=>{document.body.classList.remove("printing");document.title=o;},500); };
+</script></body></html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Generador de enlaces</title>
+<link rel="stylesheet" href="css/styles.css"></head>
+<body><main style="padding-top:28px">
+<div class="card"><div class="kicker">Herramienta para el profesional</div><h1>Generador de enlaces</h1>
+<p class="muted">Crea el enlace que enviarás a cada paciente. Puedes pre-rellenar su nombre y elegir cuántos días de diario debe completar.</p>
+<div class="fld"><label class="f" for="n">Nombre del paciente <small>(opcional)</small></label><input id="n" type="text" placeholder="Ana García"></div>
+<div class="fld"><label class="f">Enlace</label><input id="out" type="text" readonly></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="copy">Copiar enlace</button><a class="btn sec" id="wa" target="_blank" rel="noopener" style="text-decoration:none;display:inline-grid;place-items:center">Enviar por WhatsApp</a><a class="btn sec" id="ml" style="text-decoration:none;display:inline-grid;place-items:center">Enviar por correo</a></div>
+</div></main>
+<script src="js/config.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+function upd(){
+  const u=new URL("index.html",location.href); const n=$("#n").value.trim(); if(n) u.searchParams.set("n",n); 
+  const link=u.toString(); $("#out").value=link;
+  const first=(n.split(" ")[0]||"");
+  const msg=`Hola${first?" "+first:""}, te paso el cuestionario previo a nuestra consulta. Puedes rellenarlo poco a poco desde el móvil o el ordenador (se guarda solo). Al terminar, se me envía directamente: ${link}`;
+  $("#wa").href="https://wa.me/?text="+encodeURIComponent(msg);
+  $("#ml").href="mailto:?subject="+encodeURIComponent("Cuestionario previo a tu consulta")+"&body="+encodeURIComponent(msg);
+}
+["#n"].forEach(s=>$(s).addEventListener("input",upd)); upd();
+$("#copy").onclick=async()=>{ try{await navigator.clipboard.writeText($("#out").value);$("#copy").textContent="¡Copiado!";}catch(e){$("#out").select();document.execCommand("copy");} setTimeout(()=>$("#copy").textContent="Copiar enlace",1800); };
+</script></body></html>

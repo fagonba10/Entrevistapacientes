@@ -1,0 +1,1 @@
+Copia aqui tu logo (por ejemplo logo.png) y escribe su ruta en js/config.js, en la opcion "logo".
